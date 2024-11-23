@@ -1,4 +1,5 @@
 import './global.css';
+import { Providers } from './providers';
 
 export const metadata = {
   title: 'Welcome to frontend',
@@ -11,8 +12,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className="light">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
