@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentService } from './comment.service';
 import { CommentRepository } from './comment.repository';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { Comment } from './comment.entity';
+import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
+
+const moduleMocker = new ModuleMocker(global);
 
 describe('CommentService', () => {
   let service: CommentService;
@@ -11,24 +12,32 @@ describe('CommentService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forFeature([Comment])],
-      providers: [
-        CommentService,
-        {
-          provide: getRepositoryToken(Comment),
-          useValue: {
-            save: jest.fn(),
+      providers: [CommentService],
+    })
+      .useMocker((token) => {
+        if (token === CommentRepository) {
+          return {
             find: jest.fn(),
             findOne: jest.fn(),
+            findAll: jest.fn(),
+            findOneBy: jest.fn(),
+            save: jest.fn(),
             update: jest.fn(),
             delete: jest.fn(),
-          },
-        },
-      ],
-    }).compile();
+          };
+        }
+        if (typeof token === 'function') {
+          const mockMetadata = moduleMocker.getMetadata(
+            token
+          ) as MockFunctionMetadata<any, any>;
+          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
+          return new Mock();
+        }
+      })
+      .compile();
 
     service = module.get<CommentService>(CommentService);
-    repository = module.get<CommentRepository>(getRepositoryToken(Comment));
+    repository = module.get<CommentRepository>(CommentRepository);
   });
 
   it('should be defined', () => {
@@ -65,7 +74,7 @@ describe('CommentService', () => {
       comment.text = 'Test comment';
       comment.author = 'Test author';
 
-      jest.spyOn(repository, 'findOne').mockResolvedValue(comment);
+      jest.spyOn(repository, 'findOneBy').mockResolvedValue(comment);
 
       expect(await service.findOne(1)).toEqual(comment);
     });
@@ -78,7 +87,7 @@ describe('CommentService', () => {
       comment.author = 'Updated author';
 
       jest.spyOn(repository, 'update').mockResolvedValue(undefined);
-      jest.spyOn(repository, 'findOne').mockResolvedValue(comment);
+      jest.spyOn(repository, 'findOneBy').mockResolvedValue(comment);
 
       expect(await service.update(1, comment)).toEqual(comment);
     });
