@@ -2,13 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentRepository } from './comment.repository';
 import { Comment } from './comment.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectRepository(CommentRepository)
-    private readonly commentRepository: CommentRepository,
+    private readonly commentRepository: CommentRepository
   ) {}
 
   create(comment: Comment): Promise<Comment> {
@@ -20,12 +19,12 @@ export class CommentService {
   }
 
   findOne(id: number): Promise<Comment> {
-    return this.commentRepository.findOne(id);
+    return this.commentRepository.findOneBy({ id });
   }
 
   async update(id: number, comment: Comment): Promise<Comment> {
     await this.commentRepository.update(id, comment);
-    return this.commentRepository.findOne(id);
+    return this.commentRepository.findOneBy({ id });
   }
 
   async remove(id: number): Promise<void> {
