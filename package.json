@@ -6,8 +6,10 @@
   "private": true,
   "dependencies": {
     "@nestjs/common": "^10.0.2",
+    "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
+    "@nestjs/typeorm": "^10.0.2",
     "@nextui-org/card": "^2.0.34",
     "@nextui-org/react": "^2.4.8",
     "@nextui-org/system": "^2.2.6",
@@ -16,10 +18,12 @@
     "framer-motion": "^11.11.17",
     "lucide-react": "^0.460.0",
     "next": "14.2.16",
+    "pg": "^8.13.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
