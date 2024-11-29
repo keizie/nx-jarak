@@ -1,5 +1,5 @@
-import CommentSection from '../../../components/comment-section';
-import ReviewCard from '../../../components/review-card';
+import CommentSection from '@/components/comment-section';
+import ReviewCard from '@/components/review-card';
 
 export default function Index() {
   const review = {
